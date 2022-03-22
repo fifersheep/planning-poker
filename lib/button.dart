@@ -27,16 +27,19 @@ class _ButtonState extends State<Button> {
           isPressed = false;
         });
       },
-      child: Container(
-        decoration: BoxDecoration(
-            color: Color(isPressed ? 0xCCCCCCCC : 0xDDDDDDDD),
-            borderRadius: BorderRadius.all(Radius.circular(4))),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 8,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Color(isPressed ? 0xCCCCCCCC : 0xDDDDDDDD),
+              borderRadius: BorderRadius.all(Radius.circular(4))),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 8,
+            ),
+            child: Text(widget.label),
           ),
-          child: Text(widget.label),
         ),
       ),
     );

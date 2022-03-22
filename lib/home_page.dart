@@ -11,13 +11,14 @@ class HomePage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Home",
+                "Choose one",
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 36,
                 ),
               ),
             ),
-            Button("Sign up", () {}),
+            Button("Present", () {}),
+            Button("Participate", () {}),
           ],
         ),
       );
