@@ -2,9 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
 
 class HomePage extends StatelessWidget {
-  final void Function() onSignupTapped;
+  final void Function() onPresentationTapped;
+  final void Function() onParticipationTapped;
 
-  HomePage({Key? key, required this.onSignupTapped}) : super(key: key);
+  HomePage({
+    Key? key,
+    required this.onPresentationTapped,
+    required this.onParticipationTapped,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Center(
@@ -19,8 +24,8 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            Button("Present", () {}),
-            Button("Participate", () {}),
+            Button("Present", onPresentationTapped),
+            Button("Participate", onParticipationTapped),
           ],
         ),
       );
