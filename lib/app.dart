@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:planning_poker/home_page.dart';
 import 'package:planning_poker/participation_page.dart';
 import 'package:planning_poker/presentation_page.dart';
@@ -19,9 +19,10 @@ class _AppState extends State<App> {
   }
 
   @override
-  Widget build(BuildContext context) => Directionality(
-        textDirection: TextDirection.ltr,
-        child: _buildPage(),
+  Widget build(BuildContext context) => MaterialApp(
+        home: Scaffold(
+          body: _buildPage(),
+        ),
       );
 
   Widget _buildPage() {
