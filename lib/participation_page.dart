@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planning_poker/participation.dart';
 import 'package:planning_poker/participation_registration.dart';
 import 'package:planning_poker/participation_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,9 +49,7 @@ class _ParticipationPageState extends State<ParticipationPage> {
     } else if (state is ParticipantNotFound) {
       return ParticipationRegistration(_setParticipant);
     } else if (state is ParticipantFound) {
-      return Center(
-        child: Text("Participant found: ${state.participantId}"),
-      );
+      return Participation(state.participantId);
     } else {
       return Center(
         child: Text("Error"),
