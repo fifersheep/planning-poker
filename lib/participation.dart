@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
+import 'package:planning_poker/participation_vote.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Participant {
@@ -27,11 +28,7 @@ class _ParticipationState extends State<Participation> {
 
   @override
   void initState() {
-    subscription = Supabase.instance.client
-        .from('participants:id=eq.$participantId')
-        .stream(['id'])
-        .limit(1)
-        .execute();
+    subscription = Supabase.instance.client.from('participants:id=eq.$participantId').stream(['id']).limit(1).execute();
 
     super.initState();
   }
@@ -85,7 +82,10 @@ class _ParticipationState extends State<Participation> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("${participant.name} | ${participant.vote}"),
+              ParticipationVote(
+                label: participant.name,
+                vote: participant.vote,
+              ),
               ...voteOptions,
               Button("Clear", () {
                 _submitParticipantVote(null);

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:planning_poker/participation_vote.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PresentationPage extends StatefulWidget {
@@ -9,11 +10,7 @@ class PresentationPage extends StatefulWidget {
 }
 
 class _PresentationPageState extends State<PresentationPage> {
-  final subscription = Supabase.instance.client
-      .from('participants')
-      .stream(['id'])
-      .order('name')
-      .execute();
+  final subscription = Supabase.instance.client.from('participants').stream(['id']).order('name').execute();
 
   @override
   void dispose() {
@@ -29,18 +26,22 @@ class _PresentationPageState extends State<PresentationPage> {
               BuildContext context,
               AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
             ) {
-              if (!snapshot.hasData ||
-                  snapshot.hasError ||
-                  snapshot.data!.isEmpty) {
+              if (!snapshot.hasData || snapshot.hasError || snapshot.data!.isEmpty) {
                 return Container();
               }
 
               final participants = snapshot.data!.map((data) {
-                return Text("${data['name']} | ${data['vote']}");
+                return ParticipationVote(
+                  label: "${data['name']}",
+                  vote: data['vote'],
+                );
               }).toList();
 
-              return Column(
-                children: participants,
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: participants,
+                ),
               );
             }),
       );
