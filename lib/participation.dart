@@ -72,11 +72,12 @@ class _ParticipationState extends State<Participation> {
           return Participant(data['name'], data['vote']);
         }).toList()[0];
 
-        final voteOptions = [1, 2, 3, 5, 8, 13]
-            .map((v) => Button("$v", () {
-                  _submitParticipantVote(v);
-                }, emphasis: participant.vote == v))
-            .toList();
+        final voteOptions = [0, 1, 2, 3, 5, 8, 13].map((v) {
+          final label = v == 0 ? "?" : "$v";
+          return Button(label, () {
+            _submitParticipantVote(v);
+          }, emphasis: participant.vote == v);
+        }).toList();
 
         return Center(
           child: Column(
