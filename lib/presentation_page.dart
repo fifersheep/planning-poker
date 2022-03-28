@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:planning_poker/button.dart';
 import 'package:planning_poker/participation_vote.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,6 +12,16 @@ class PresentationPage extends StatefulWidget {
 
 class _PresentationPageState extends State<PresentationPage> {
   final subscription = Supabase.instance.client.from('participants').stream(['id']).order('name').execute();
+
+  Future<void> _clearParticipantVotes() async {
+    await Supabase.instance.client
+        .from('participants')
+        .update({
+          'vote': null,
+        })
+        .eq('planning_session_id', 1)
+        .execute();
+  }
 
   @override
   void dispose() {
@@ -40,7 +51,10 @@ class _PresentationPageState extends State<PresentationPage> {
               return Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: participants,
+                  children: [
+                    Button("Clear", _clearParticipantVotes),
+                    ...participants,
+                  ],
                 ),
               );
             }),
