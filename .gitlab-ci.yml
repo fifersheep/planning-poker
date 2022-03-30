@@ -7,7 +7,7 @@ before_script:
 pages:
   stage: deploy
   script:
-    - flutter build web
+    - flutter build web --dart-define="SUPABASE_URL=$SUPABASE_URL" --dart-define="SUPABASE_PUB_KEY=$SUPABASE_PUB_KEY"
     - cp -r build/web public
   artifacts:
     paths:
