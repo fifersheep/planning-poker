@@ -1,7 +1,7 @@
 name: planning_poker
 description: A new Flutter project.
 
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -14,10 +14,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   supabase_flutter: 0.2.12
   shared_preferences: ^2.0.13
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
+  assets:
+    - .env
+
   uses-material-design: true

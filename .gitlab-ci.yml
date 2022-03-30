@@ -1,13 +1,15 @@
 image: cirrusci/flutter:2.10.3
 
 before_script:
+  - chmod +x ./setup_env.sh
+  - ./setup_env.sh
   - flutter config --enable-web
   - flutter pub get
 
 pages:
   stage: deploy
   script:
-    - flutter build web --dart-define="SUPABASE_URL=$SUPABASE_URL" --dart-define="SUPABASE_PUB_KEY=$SUPABASE_PUB_KEY"
+    - flutter build web
     - cp -r build/web public
   artifacts:
     paths:
