@@ -12,8 +12,9 @@ class Participant {
 
 class Participation extends StatefulWidget {
   final int participantId;
+  final void Function() clearParticipant;
 
-  const Participation(this.participantId, {Key? key}) : super(key: key);
+  const Participation(this.participantId, this.clearParticipant, {Key? key}) : super(key: key);
 
   @override
   State<Participation> createState() => _ParticipationState(participantId);
@@ -57,7 +58,14 @@ class _ParticipationState extends State<Participation> {
           );
         }
 
-        if (!snapshot.hasData || snapshot.hasError || snapshot.data!.isEmpty) {
+        if (snapshot.data!.isEmpty) {
+          widget.clearParticipant();
+          return Center(
+            child: Text("Participant not available."),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.hasError) {
           return Center(
             child: Text("Error"),
           );

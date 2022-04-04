@@ -40,6 +40,16 @@ class _ParticipationPageState extends State<ParticipationPage> {
     }
   }
 
+  void _clearParticipant() async {
+    final prefs = await SharedPreferences.getInstance();
+    final success = await prefs.remove('participantId');
+    if (success) {
+      setState(() {
+        _state = ParticipationState.notFound();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = _state;
@@ -49,7 +59,7 @@ class _ParticipationPageState extends State<ParticipationPage> {
     } else if (state is ParticipantNotFound) {
       return ParticipationRegistration(_setParticipant);
     } else if (state is ParticipantFound) {
-      return Participation(state.participantId);
+      return Participation(state.participantId, _clearParticipant);
     } else {
       return Center(
         child: Text("Error"),
