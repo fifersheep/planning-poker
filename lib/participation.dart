@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
+import 'package:planning_poker/data/participants/dto/participant_dto.dart';
+import 'package:planning_poker/data/participants/participants_repository.dart';
 import 'package:planning_poker/participation_vote.dart';
-import 'main.dart';
 
 class Participant {
   final String name;
@@ -23,45 +24,29 @@ class Participation extends StatefulWidget {
 class _ParticipationState extends State<Participation> {
   final int participantId;
 
-  late Stream<List<Map<String, dynamic>>> subscription;
+  late Stream<ParticipantDto?> subscription;
 
   _ParticipationState(this.participantId);
 
   @override
   void initState() {
-    subscription =
-        SupabaseClientExtensions.instance.from('participants:id=eq.$participantId').stream(['id']).limit(1).execute();
-
+    subscription = ParticipantsRepository().participant(participantId);
     super.initState();
   }
 
-  Future<void> _submitParticipantVote(int? vote) async {
-    await SupabaseClientExtensions.instance
-        .from('participants')
-        .update({
-          'vote': vote,
-        })
-        .eq('id', participantId)
-        .execute();
-  }
+  Future<void> _submitParticipantVote(int? vote) async =>
+      ParticipantsRepository().submitParticipantVote(participantId, vote);
 
   @override
   Widget build(BuildContext context) => StreamBuilder(
       stream: subscription,
       builder: (
         BuildContext context,
-        AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+        AsyncSnapshot<ParticipantDto?> snapshot,
       ) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: Text("Loading..."),
-          );
-        }
-
-        if (snapshot.data!.isEmpty) {
-          widget.clearParticipant();
-          return Center(
-            child: Text("Participant not available."),
           );
         }
 
@@ -71,15 +56,19 @@ class _ParticipationState extends State<Participation> {
           );
         }
 
-        final participant = snapshot.data!.map((data) {
-          return Participant(data['name'], data['vote']);
-        }).toList()[0];
+        final participant = snapshot.data;
+        if (participant == null) {
+          widget.clearParticipant();
+          return Center(
+            child: Text("Participant not available."),
+          );
+        }
 
         final voteOptions = [0, 1, 2, 3, 5, 8, 13].map((v) {
           final label = v == 0 ? "?" : "$v";
           return Button(label, () {
             _submitParticipantVote(v);
-          }, emphasis: participant.vote == v);
+          }, emphasis: snapshot.data?.vote == v);
         }).toList();
 
         return Center(

@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
+import 'package:planning_poker/data/participants/dto/participant_dto.dart';
+import 'package:planning_poker/data/participants/participants_repository.dart';
 import 'package:planning_poker/participation_vote.dart';
-import 'main.dart';
 
 class PresentationPage extends StatefulWidget {
   const PresentationPage({Key? key}) : super(key: key);
@@ -11,19 +12,11 @@ class PresentationPage extends StatefulWidget {
 }
 
 class _PresentationPageState extends State<PresentationPage> {
-  final subscription = SupabaseClientExtensions.instance.from('participants').stream(['id']).order('name').execute();
+  final subscription = ParticipantsRepository().planningSessionParticipants(1);
 
   bool _show = false;
 
-  Future<void> _clearParticipantVotes() async {
-    await SupabaseClientExtensions.instance
-        .from('participants')
-        .update({
-          'vote': null,
-        })
-        .eq('planning_session_id', 1)
-        .execute();
-  }
+  Future<void> _clearParticipantVotes() async => ParticipantsRepository().clearParticipantVotes(1);
 
   @override
   Widget build(BuildContext context) => Center(
@@ -31,16 +24,21 @@ class _PresentationPageState extends State<PresentationPage> {
             stream: subscription,
             builder: (
               BuildContext context,
-              AsyncSnapshot<List<Map<String, dynamic>>> snapshot,
+              AsyncSnapshot<List<ParticipantDto>> snapshot,
             ) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: Text("Loading..."),
+                );
+              }
               if (!snapshot.hasData || snapshot.hasError || snapshot.data!.isEmpty) {
                 return Container();
               }
 
-              final participants = snapshot.data!.where((data) => data['vote'] != null).map((data) {
+              final participants = snapshot.data!.where((data) => data.vote != null).map((data) {
                 return ParticipationVote(
-                  label: "${data['name']}",
-                  vote: _show ? data['vote'] : null,
+                  label: data.name,
+                  vote: _show ? data.vote : null,
                 );
               }).toList();
 

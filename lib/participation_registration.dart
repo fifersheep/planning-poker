@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planning_poker/button.dart';
-import 'main.dart';
+import 'package:planning_poker/data/participants/participants_repository.dart';
 
 class ParticipationRegistration extends StatefulWidget {
   final void Function(int participantId) setParticipantId;
@@ -26,14 +26,7 @@ class _ParticipationRegistrationState extends State<ParticipationRegistration> {
     super.dispose();
   }
 
-  Future<int?> _submitParticipant(String name) async {
-    final res = await SupabaseClientExtensions.instance.from('participants').insert({
-      'name': name,
-      'planning_session_id': 1,
-    }).execute();
-
-    return res.data[0]['id'] as int?;
-  }
+  Future<int?> _submitParticipant(String name) async => ParticipantsRepository().submitParticipant(name, 1);
 
   @override
   Widget build(BuildContext context) => Center(
