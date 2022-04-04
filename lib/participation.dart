@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
 import 'package:planning_poker/participation_vote.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
+import 'main.dart';
 
 class Participant {
   final String name;
@@ -28,19 +29,20 @@ class _ParticipationState extends State<Participation> {
 
   @override
   void initState() {
-    subscription = Supabase.instance.client.from('participants:id=eq.$participantId').stream(['id']).limit(1).execute();
+    subscription =
+        SupabaseClientExtensions.instance.from('participants:id=eq.$participantId').stream(['id']).limit(1).execute();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    Supabase.instance.client.removeAllSubscriptions(); // ???
+    SupabaseClientExtensions.instance.removeAllSubscriptions(); // ???
     super.dispose();
   }
 
   Future<void> _submitParticipantVote(int? vote) async {
-    await Supabase.instance.client
+    await SupabaseClientExtensions.instance
         .from('participants')
         .update({
           'vote': vote,

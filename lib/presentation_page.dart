@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
 import 'package:planning_poker/participation_vote.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
+import 'main.dart';
 
 class PresentationPage extends StatefulWidget {
   const PresentationPage({Key? key}) : super(key: key);
@@ -11,10 +12,10 @@ class PresentationPage extends StatefulWidget {
 }
 
 class _PresentationPageState extends State<PresentationPage> {
-  final subscription = Supabase.instance.client.from('participants').stream(['id']).order('name').execute();
+  final subscription = SupabaseClientExtensions.instance.from('participants').stream(['id']).order('name').execute();
 
   Future<void> _clearParticipantVotes() async {
-    await Supabase.instance.client
+    await SupabaseClientExtensions.instance
         .from('participants')
         .update({
           'vote': null,
@@ -25,7 +26,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
   @override
   void dispose() {
-    Supabase.instance.client.removeAllSubscriptions(); // ???
+    SupabaseClientExtensions.instance.realtime.disconnect();
     super.dispose();
   }
 
@@ -41,7 +42,7 @@ class _PresentationPageState extends State<PresentationPage> {
                 return Container();
               }
 
-              final participants = snapshot.data!.map((data) {
+              final participants = snapshot.data!.where((data) => data['vote'] != null).map((data) {
                 return ParticipationVote(
                   label: "${data['name']}",
                   vote: data['vote'],

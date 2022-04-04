@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:planning_poker/button.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
+import 'main.dart';
 
 class ParticipationRegistration extends StatefulWidget {
   final void Function(int participantId) setParticipantId;
 
-  ParticipationRegistration(this.setParticipantId, {Key? key})
-      : super(key: key);
+  ParticipationRegistration(this.setParticipantId, {Key? key}) : super(key: key);
 
   @override
-  State<ParticipationRegistration> createState() =>
-      _ParticipationRegistrationState();
+  State<ParticipationRegistration> createState() => _ParticipationRegistrationState();
 }
 
 class _ParticipationRegistrationState extends State<ParticipationRegistration> {
@@ -29,7 +28,7 @@ class _ParticipationRegistrationState extends State<ParticipationRegistration> {
   }
 
   Future<int?> _submitParticipant(String name) async {
-    final res = await Supabase.instance.client.from('participants').insert({
+    final res = await SupabaseClientExtensions.instance.from('participants').insert({
       'name': name,
       'planning_session_id': 1,
     }).execute();
