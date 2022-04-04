@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:planning_poker/button.dart';
 import 'package:planning_poker/participation_vote.dart';
-import 'package:supabase/supabase.dart';
 import 'main.dart';
 
 class PresentationPage extends StatefulWidget {
@@ -22,12 +21,6 @@ class _PresentationPageState extends State<PresentationPage> {
         })
         .eq('planning_session_id', 1)
         .execute();
-  }
-
-  @override
-  void dispose() {
-    SupabaseClientExtensions.instance.realtime.disconnect();
-    super.dispose();
   }
 
   @override

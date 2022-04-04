@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:planning_poker/button.dart';
-import 'package:supabase/supabase.dart';
 import 'main.dart';
 
 class ParticipationRegistration extends StatefulWidget {
