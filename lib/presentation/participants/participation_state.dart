@@ -1,22 +1,10 @@
-abstract class ParticipationState {
-  ParticipationState._();
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory ParticipationState.loading() => Loading._();
-  factory ParticipationState.found(int participantId) =>
-      ParticipantFound._(participantId);
-  factory ParticipationState.notFound() => ParticipantNotFound._();
-}
+part 'participation_state.freezed.dart';
 
-class Loading extends ParticipationState {
-  Loading._() : super._();
-}
-
-class ParticipantFound extends ParticipationState {
-  final int participantId;
-
-  ParticipantFound._(this.participantId) : super._();
-}
-
-class ParticipantNotFound extends ParticipationState {
-  ParticipantNotFound._() : super._();
+@freezed
+class ParticipationState with _$ParticipationState {
+  const factory ParticipationState.loading() = Loading;
+  const factory ParticipationState.found(int participantId) = ParticipantFound;
+  const factory ParticipationState.notFound() = ParticipantNotFound;
 }

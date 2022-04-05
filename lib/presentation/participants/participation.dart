@@ -4,13 +4,6 @@ import 'package:planning_poker/data/participants/dto/participant_dto.dart';
 import 'package:planning_poker/data/participants/participants_repository.dart';
 import 'package:planning_poker/presentation/participants/participation_vote.dart';
 
-class Participant {
-  final String name;
-  final int? vote;
-
-  Participant(this.name, this.vote);
-}
-
 class Participation extends StatefulWidget {
   final int participantId;
   final void Function() clearParticipant;
