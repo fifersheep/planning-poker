@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:planning_poker/data/persistence.dart';
 import 'package:planning_poker/presentation/participants/participation.dart';
 import 'package:planning_poker/presentation/participants/participation_registration.dart';
 import 'package:planning_poker/presentation/participants/participation_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ParticipationPage extends StatefulWidget {
   const ParticipationPage({Key? key}) : super(key: key);
@@ -14,41 +14,25 @@ class ParticipationPage extends StatefulWidget {
 class _ParticipationPageState extends State<ParticipationPage> {
   ParticipationState _state = ParticipationState.loading();
 
-  void _loadParticipantId() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final pId = prefs.getInt('participantId');
-    final ParticipationState newState;
-    if (pId != null) {
-      newState = ParticipationState.found(pId);
-    } else {
-      newState = ParticipationState.notFound();
-    }
-
-    setState(() {
-      _state = newState;
+  void _loadParticipantId() {
+    Persistence().loadParticipantId().then((pId) {
+      _setState(pId != null ? ParticipationState.found(pId) : ParticipationState.notFound());
     });
   }
 
   void _setParticipant(int participantId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final success = await prefs.setInt('participantId', participantId);
-    if (success) {
-      setState(() {
-        _state = ParticipationState.found(participantId);
-      });
-    }
+    final success = await Persistence().setParticipant(participantId);
+    if (success) _setState(ParticipationState.found(participantId));
   }
 
   void _clearParticipant() async {
-    final prefs = await SharedPreferences.getInstance();
-    final success = await prefs.remove('participantId');
-    if (success) {
-      setState(() {
-        _state = ParticipationState.notFound();
-      });
-    }
+    final success = await Persistence().clearParticipant();
+    if (success) _setState(ParticipationState.notFound());
   }
+
+  void _setState(ParticipationState state) => setState(() {
+        _state = state;
+      });
 
   @override
   Widget build(BuildContext context) {
