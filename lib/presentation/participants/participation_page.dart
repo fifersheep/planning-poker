@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:planning_poker/participation.dart';
-import 'package:planning_poker/participation_registration.dart';
-import 'package:planning_poker/participation_state.dart';
+import 'package:planning_poker/presentation/participants/participation.dart';
+import 'package:planning_poker/presentation/participants/participation_registration.dart';
+import 'package:planning_poker/presentation/participants/participation_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ParticipationPage extends StatefulWidget {

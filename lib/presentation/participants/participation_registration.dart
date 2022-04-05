@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planning_poker/button.dart';
+import 'package:planning_poker/presentation/common/button.dart';
 import 'package:planning_poker/data/participants/participants_repository.dart';
 
 class ParticipationRegistration extends StatefulWidget {

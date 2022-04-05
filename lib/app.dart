@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:planning_poker/home_page.dart';
-import 'package:planning_poker/participation_page.dart';
-import 'package:planning_poker/presentation_page.dart';
+import 'package:planning_poker/presentation/home/home_page.dart';
+import 'package:planning_poker/presentation/participants/participation_page.dart';
+import 'package:planning_poker/presentation/planning_session/presentation_page.dart';
 import 'package:planning_poker/routes.dart';
 
 class App extends StatefulWidget {

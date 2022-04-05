@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:planning_poker/button.dart';
+import 'package:planning_poker/presentation/common/button.dart';
 import 'package:planning_poker/data/participants/dto/participant_dto.dart';
 import 'package:planning_poker/data/participants/participants_repository.dart';
-import 'package:planning_poker/participation_vote.dart';
+import 'package:planning_poker/presentation/participants/participation_vote.dart';
 
 class Participant {
   final String name;

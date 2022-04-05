@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:planning_poker/button.dart';
+import 'package:planning_poker/presentation/common/button.dart';
 
 class HomePage extends StatelessWidget {
   final void Function() onPresentationTapped;
