@@ -37,9 +37,12 @@ class _PresentationPageState extends State<PresentationPage> {
               }
 
               final participants = snapshot.data!.where((data) => data.vote != null).map((data) {
-                return ParticipationVote(
-                  label: data.name,
-                  vote: _show ? data.vote : null,
+                return Container(
+                  constraints: BoxConstraints.expand(),
+                  child: ParticipationVote(
+                    label: data.name,
+                    vote: _show ? data.vote : null,
+                  ),
                 );
               }).toList();
 
