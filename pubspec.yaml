@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.0.13
   flutter_dotenv: ^5.0.2
   freezed_annotation: ^1.1.0
+  flutter_layout_grid: ^1.0.6
 
 dev_dependencies:
   flutter_test:

@@ -20,21 +20,24 @@ class ParticipationVote extends StatelessWidget {
         voteStr = vote.toString();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          voteStr,
-          style: TextStyle(fontSize: 28),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 18),
+    return Container(
+      constraints: BoxConstraints.expand(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            voteStr,
+            style: TextStyle(fontSize: 28),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
