@@ -1,9 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:planning_poker/presentation/common/button.dart';
 import 'package:planning_poker/data/participants/dto/participant_dto.dart';
 import 'package:planning_poker/data/participants/participants_repository.dart';
 import 'package:planning_poker/presentation/participants/participation_vote.dart';
+import 'package:planning_poker/presentation/planning_session/participant_vote_model.dart';
 
 class PresentationPage extends StatefulWidget {
   const PresentationPage({Key? key}) : super(key: key);
@@ -18,6 +20,32 @@ class _PresentationPageState extends State<PresentationPage> {
   bool _show = false;
 
   Future<void> _clearParticipantVotes() async => ParticipantsRepository().clearParticipantVotes(1);
+
+  Widget _grid(Iterable<ParticipantVoteModel> votedParticipants) {
+    final participants = groupBy<ParticipantVoteModel, String>(votedParticipants, (p) => p.vote)
+        .entries
+        .map((entry) => Container(
+              constraints: BoxConstraints.expand(),
+              child: ParticipationVote(
+                label: entry.key == 1 ? '${entry.key} Point' : '${entry.key} Points',
+                vote: entry.value.length,
+              ),
+            ))
+        .toList();
+
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final colCount = constraints.maxWidth > 500 ? 4 : 2;
+        final rowSize = List.generate((participants.length / colCount).ceil(), (_) => auto);
+        final colSize = List.generate(colCount, (_) => 1.fr);
+        return LayoutGrid(
+          columnSizes: colSize,
+          rowSizes: rowSize,
+          children: participants,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) => Center(
@@ -36,15 +64,9 @@ class _PresentationPageState extends State<PresentationPage> {
                 return Container();
               }
 
-              final participants = snapshot.data!.where((data) => data.vote != null).map((data) {
-                return Container(
-                  constraints: BoxConstraints.expand(),
-                  child: ParticipationVote(
-                    label: data.name,
-                    vote: _show ? data.vote : null,
-                  ),
-                );
-              }).toList();
+              final votedParticipants = snapshot.data!
+                  .where((data) => data.vote != null)
+                  .map((data) => ParticipantVoteModel(name: data.name, vote: data.vote.toString()));
 
               return Center(
                 child: Container(
@@ -52,7 +74,7 @@ class _PresentationPageState extends State<PresentationPage> {
                   constraints: BoxConstraints(
                     maxWidth: 800,
                   ),
-                  child: participants.isEmpty
+                  child: votedParticipants.isEmpty
                       ? Text("Waiting for votes...")
                       : Column(
                           mainAxisSize: MainAxisSize.min,
@@ -69,18 +91,12 @@ class _PresentationPageState extends State<PresentationPage> {
                                       _show = true;
                                     });
                                   }),
-                            LayoutBuilder(
-                              builder: (_, constraints) {
-                                final colCount = constraints.maxWidth > 500 ? 4 : 2;
-                                final rowSize = List.generate((participants.length / colCount).ceil(), (_) => auto);
-                                final colSize = List.generate(colCount, (_) => 1.fr);
-                                return LayoutGrid(
-                                  columnSizes: colSize,
-                                  rowSizes: rowSize,
-                                  children: participants,
-                                );
-                              },
-                            )
+                            _show
+                                ? _grid(votedParticipants)
+                                : ParticipationVote(
+                                    label: 'Votes',
+                                    vote: votedParticipants.length,
+                                  )
                           ],
                         ),
                 ),
